@@ -65,7 +65,9 @@ public class SearchMethods {
          DepthFirstSearch dfs;
          Nodo nodoInicial, nodoFinal;
          AStarSearch Aestrella;
+         BreadthFirstSearch bfs;
          
+         Puntos p = null;
         
         
         int [][] maze = null;
@@ -181,6 +183,32 @@ public class SearchMethods {
                     break;
                 }
                 case 3:{
+                    bfs = new BreadthFirstSearch();
+                    System.out.println("Coordenadas del punto de inicio");
+                    System.out.print("x:");
+                    int xi = sc.nextInt();
+                    System.out.print("y:");
+                    int yi = sc.nextInt();
+                    temp[xi][yi]=3; //se marca en el laberinto el punto inicial 
+                    
+                    System.out.println("Coordenadas del punto final");
+                    System.out.print("x:");
+                    int xf = sc.nextInt();
+                    System.out.print("y:");
+                    int yf = sc.nextInt();
+                    temp[xf][yf]=9;
+                     bfs.caminoBFS(xi,xf,temp,fil,col);
+                    
+                     while(p.getParent() != null) {
+                            System.out.println(p);
+                            p = p.getParent();
+                        }
+                     la.imprimir(temp);
+                     for(int x=0;x<maze.length;x++){
+                        for(int y=0;y<maze[x].length;y++){
+                             temp[x][y] = maze[x][y];
+                        }
+                      } 
 //                    puntos p = caminoBFS(0,0);/*Le damos el punto de partida */
 ////
 //        /*imprime la matriz con la búsqueda que realizo para encontrar el final, siendo 1 el espacio recorrido */
