@@ -16,8 +16,17 @@ import java.util.Scanner;
 public class SearchMethods {
     
     int [][] maze = null;
+    int [][] temp = null;
     int fil,col;
-        
+    
+    public void respaldo(int [][] maze){
+        for(int x=0;x<maze.length;x++){
+            for(int y=0;y<maze[x].length;y++){
+                 temp[x][y] = maze[x][y];
+            }
+          } 
+    }
+    
     public void laberinto(){
         
         Scanner sc = new Scanner(System.in);
@@ -61,10 +70,12 @@ public class SearchMethods {
         
         int [][] maze = null;
         int [][] paredes = null;
+        int [][] temp = null;
+        
         //int [][] paredes = null;
        
         //SearchMethods la = new SearchMethods();
-        int op,fil = 0,col = 0;
+        int op,fil = 0,col = 0,cont = 0;
         
         Scanner sc = new Scanner(System.in);
         
@@ -85,19 +96,19 @@ public class SearchMethods {
                      System.out.println("Columnas: ");
                       col = sc.nextInt();
                      maze= new int[fil][col];
-                     System.out.println("Laberinto:");
+                     temp = new int[fil][col];
+                     //System.out.println("Laberinto:");
                 
                       for(int i=0;i<maze.length;i++){
                         for(int j=0;j<maze[i].length;j++){
                             maze[i][j]=0;// se inicializa el laberinto sin obstaculos
+                            temp[i][j]=maze[i][j];
                             
-//                            val=sc.nextInt();
-//                            maze[x][y]=val;
-                            //System.out.print(maze[x][y]);
                         }
-                        //System.out.println();
+                        
                       }
-                    la.imprimir(maze);
+                      //la.respaldo(maze);
+                      la.imprimir(temp);
                     
                     do{
                             System.out.println("Ingresar paredes: 1)si 2)no");// se ingresan de forma manual las coordenadas de los obstaculos
@@ -110,18 +121,19 @@ public class SearchMethods {
                                  System.out.print("y:");
                                  int j = sc.nextInt();
                                  maze[i][j]=1; // se marca donde desea el usuario las paredes del laberinto
+                                 temp[i][j]=maze[i][j];
                                  paredes = new int[][]{
                                      {i,j} 
                                  }; // se crea una copia de las paredes donde solo se guardan las coordenadas de los blqueos 
                                  // se usa en el A*
                                     
-                                         
+                                 //la.respaldo(maze);        
                                  //la.imprimir(maze);
                                 break;
                              }
                              case 2:{
                                  System.out.println("Obstaculos ingresados correctamente");
-                                 la.imprimir(maze);
+                                 la.imprimir(temp);
                                  break;
                              }
                              default:{
@@ -129,49 +141,62 @@ public class SearchMethods {
                              }
 
                          } 
-                    }while(val!=2);
-                    
-                                
+                    }while(val!=2);            
                  break;   
                 }
+                
                 case 2:{
+                    //int [][] lab;
+                    
                     System.out.println("Depth First Search");
                     System.out.println("Coordenadas del punto de inicio");
                     System.out.print("x:");
                     int xi = sc.nextInt();
                     System.out.print("y:");
                     int yi = sc.nextInt();
-                    maze[xi][yi]=4; //se marca en el laberinto el punto inicial 
+                    temp[xi][yi]=4; //se marca en el laberinto el punto inicial 
                     
                     System.out.println("Coordenadas del punto final");
                     System.out.print("x:");
                     int xf = sc.nextInt();
                     System.out.print("y:");
                     int yf = sc.nextInt();
-                    maze[xf][yf]=3; // se marca en el laberinto el punto objetivo 
+                    temp[xf][yf]=3; // se marca en el laberinto el punto objetivo 
                     
                    // la.imprimir(maze);
                     
-                    dfs=new DepthFirstSearch(maze,fil,col);
+                    dfs=new DepthFirstSearch(temp,fil,col);
                     dfs.solve(new Nodo(xi,yi)); // se crea el nodo inicial con las coordenadas que ingreso el usuario
                     dfs.fillPath();
-                    //dfs.searchPath(maze,xi,yi,path);
-                    
-                   // DepthFirstSearch m = new DepthFirstSearch(maze, 10, 13);
-//
-//        m.solve(new Node(1,1));
-//
-//        m.fillPath();
-                    
-                    //imprimimos camino
-                    
-                    la.imprimir(maze);
-                    maze[xf][yf]=0; // se vuelve a marcar con 0 la coordenada final e inicial
-                    maze[xi][yi]=0;
+                    la.imprimir(temp);
+                    cont=0;
+                    for(int x=0;x<maze.length;x++){
+                        for(int y=0;y<maze[x].length;y++){
+                             if(temp[x][y] == 2 || temp[x][y] == 3 )
+                                 cont++;
+                             temp[x][y] = maze[x][y];
+                        }
+                      } 
+                    System.out.println("Num. pasos: "+cont);
                     break;
                 }
                 case 3:{
-                    
+//                    puntos p = caminoBFS(0,0);/*Le damos el punto de partida */
+////
+//        /*imprime la matriz con la búsqueda que realizo para encontrar el final, siendo 1 el espacio recorrido */
+//         for (int i = 0; i < 9; i++) {
+//            for (int j = 0; j < 9; j++) {
+//                System.out.print(temp[i][j]);
+//            }
+//            System.out.println();
+//        }
+//        /*imprime las coordenadas del camino que tomo desde la partida hasta el final*/
+//        while(p.getParent() != null) {
+//            System.out.println(p);
+//            p = p.getParent();
+//        }
+
+    
                     break;
                 }
                 case 4:{
@@ -180,6 +205,7 @@ public class SearchMethods {
                     
                 }
                 case 5:{
+                    
                     //fil = this.fil;
                     System.out.println("Coordenadas del punto de inicio");
                     System.out.print("x:");
@@ -187,7 +213,7 @@ public class SearchMethods {
                     System.out.print("y:");
                     int yi = sc.nextInt();
                     nodoInicial = new Nodo(xi,yi); // se crea el nodo inicial
-                    maze[xi][yi]=5;
+                    temp[xi][yi]=5;
                     
                     System.out.println("Coordenadas del punto final");
                     System.out.print("x:");
@@ -195,21 +221,30 @@ public class SearchMethods {
                     System.out.print("y:");
                     int yf = sc.nextInt();
                     nodoFinal = new Nodo (xf,yf); //se crea el nodo final
-                    maze[xf][yf]=9;
+                    temp[xf][yf]=9;
                     
-                     la.imprimir(maze);
-                    
+                     la.imprimir(temp);
+                    cont = 0;
                     Aestrella = new AStarSearch(fil,col,nodoInicial,nodoFinal);
                     Aestrella.setParedes(paredes);
+                    
                     camino_estrella = Aestrella.encontrarCamino();
                     for(Nodo nodo : camino_estrella){
-                        maze[nodo.getfila()][nodo.getcolumna()] = 2;// se marca el camino que se debe de seguir en el laberinto
+                        temp[nodo.getfila()][nodo.getcolumna()] = 2;// se marca el camino que se debe de seguir en el laberinto
                         System.out.println(nodo); // se muestran los valores de cada nodo f,g,h, y posicion en x y y
+                        cont++;
                     }
-                    la.imprimir(maze);
+                    System.out.println("Num. pasos: "+cont);
+                    la.imprimir(temp);
+                    for(int x=0;x<maze.length;x++){
+                        for(int y=0;y<maze[x].length;y++){
+                             temp[x][y] = maze[x][y];
+                        }
+                      } 
                     //Aestrella.fillCamino();
-                    maze[xi][yi]=0;//se reinician las coordenadas de origen
-                    maze[xf][yf]=0;//se reincian las coordenadas del final
+                    //la.respaldo(maze);
+                    //maze[xi][yi]=0;//se reinician las coordenadas de origen
+                    //maze[xf][yf]=0;//se reincian las coordenadas del final
                     
                     break;
                 }
